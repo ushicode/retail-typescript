@@ -1,18 +1,26 @@
 {
   "compilerOptions": {
     "noImplicitAny": false,
+    "moduleResolution": "node",
     "noEmitOnError": true,
     "removeComments": false,
     "sourceMap": true,
-    "esModuleInterop": true,      
-    "strict": true,        
-    "skipLibCheck": true,                         
-    "target": "es2016", 
-    "module": "commonjs",      
-    "outDir": "./build",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "target": "es2016",
+    "module": "commonjs",
+    "outDir": "build",
+    "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "*": [
+        "node_modules/*"
+      ]
+    },
   },
-  "include": [
-    "./src/**/*"
-  ]
+  "include": ["./src/", "./index.ts"]
+  // "include": ["includes", "includes"]
+  // "exclude": [],
+ 
 }

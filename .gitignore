@@ -17,6 +17,7 @@
 *.xcodeproj
 /.idea/
 /dist/
+/build/
 node_modules/
 SHASUMS256.txt
 **/package-lock.json
@@ -54,5 +55,3 @@ ts-gen
 patches/mtime-cache.json
 
 spec/fixtures/logo.png
-
-build/

@@ -2,38 +2,42 @@
   "name": "grc-retail-typescript",
   "version": "1.0.0-alpha.3",
   "description": "electron wrapper for GRC Retail App",
-  "main": "./build/main.js",
   "private": true,
   "scripts": {
-    "build": "tsc --build",
-    "clean": "tsc --build --clean",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run build && electron .",
-    "dist:mac": "electron-builder -mw",
-    "dist:win": "electron-builder --windows nsis:ia32"
+    "build": "tsc",
+    "clean": "tsc --build --clean",
+    "copy:dev": "rsync -av --exclude 'index.ts' --exclude '.env' --exclude '.git' --exclude 'tsconfig.json' --exclude 'node_modules' --exclude '.gitignore' --exclude 'README.md' --exclude 'build' --exclude 'dist' --exclude 'src'  ./ build",
+    "copy:release": "rsync -av --exclude 'index.ts' --exclude '.env' --exclude '.git' --exclude 'tsconfig.json' --exclude '.gitignore' --exclude 'README.md' --exclude 'build' --exclude 'src'  ./ build",
+    "start:dev" : "concurrently \"rm -rf ./build && npm run build && npm run copy:dev && electron ./build/index.js \" ",
+    "dist:mac": "concurrently \"rm -rf ./dist && rm -rf ./build && npm run build && npm run copy:release && cd build && electron-builder -m\" ",
+    "dist:win": "concurrently \"rm -rf ./dist && rm -rf ./build && npm run build && npm run copy:release && cd build && electron-builder --win --ia32\" "
   },
   "author": "Storm Games Ltd",
   "license": "SEE LICENSE IN <filename>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ushicode/retail-typescript.git"
+    "url": "https://github.com/ushicode/retail-typescript"
   },
   "bugs": {
     "url": "https://github.com/ushicode/retail-typescript/issues"
   },
-  "homepage": "https://github.com/ushicode/retail-typescript#readme",
+  "homepage": "https://www.stormgamingtechnology.com",
   "build": {
     "asar": false,
-    "extends": null,
-    "productName": "GRC GAME MENU",
+    "productName": "GRC Game Menu",
     "appId": "co.uk.stormgt.grc",
+    "copyright": "Copyright @2023 author",
     "mac": {
-      "artifactName": "${productName}-${version}-osx.${ext}",
-      "category": "public.app-category.productivity",
-      "target": "dmg"
+      "target": "dmg",
+      "icon": "./assets/images/icon.png"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "./assets/images/icon.ico"
+    },
+    "directories": {
+      "output": "../dist"
     }
   },
   "dependencies": {
@@ -43,6 +47,7 @@
   },
   "devDependencies": {
     "@types/electron": "^1.6.10",
+    "concurrently": "^8.2.0",
     "electron": "^25.4.0",
     "electron-builder": "^24.6.3",
     "typescript": "^5.1.6"
