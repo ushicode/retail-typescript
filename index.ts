@@ -1,7 +1,11 @@
 import { app, BrowserWindow } from "electron";
-import path from "path";
+import {UpdateService} from "./src/services/update-service";
+import * as path from "path";
 
-const enableDevTool = true;
+
+const updateService = new UpdateService();
+
+const enableDevMode = true;
 
 let browserWindow: BrowserWindow | null;
 const createWindow = (): void => {
@@ -14,7 +18,7 @@ const createWindow = (): void => {
     },
   });
 
-  enableDevTool && browserWindow.webContents.openDevTools({ mode: "detach" });
+  enableDevMode && browserWindow.webContents.openDevTools({ mode: "detach" });
 
   browserWindow.loadFile("index.html");
 };
@@ -22,12 +26,16 @@ const createWindow = (): void => {
 app.whenReady().then(() => {
   createWindow();
 
+  updateService.checkForUpdates()
+
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
   });
 });
+
+ updateService.setUpdateEvents()
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
