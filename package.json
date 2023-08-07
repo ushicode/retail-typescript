@@ -1,17 +1,15 @@
 {
   "name": "grc-retail-typescript",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.1",
   "description": "electron wrapper for GRC Retail App",
   "private": true,
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "clean": "tsc --build --clean",
-    "copy:dev": "rsync -av --exclude 'index.ts' --exclude '.env' --exclude '.git' --exclude 'tsconfig.json' --exclude 'node_modules' --exclude '.gitignore' --exclude 'README.md' --exclude 'build' --exclude 'dist' --exclude 'src'  ./ build",
-    "copy:release": "rsync -av --exclude 'index.ts' --exclude '.env' --exclude '.git' --exclude 'tsconfig.json' --exclude '.gitignore' --exclude 'README.md' --exclude 'build' --exclude 'src'  ./ build",
-    "start:dev" : "concurrently \"rm -rf ./build && npm run build && npm run copy:dev && electron ./build/index.js \" ",
-    "dist:mac": "concurrently \"rm -rf ./dist && rm -rf ./build && npm run build && npm run copy:release && cd build && electron-builder -m\" ",
-    "dist:win": "concurrently \"rm -rf ./dist && rm -rf ./build && npm run build && npm run copy:release && cd build && electron-builder --win --ia32\" "
+    "excludes": "rsync -av --exclude  --exclude '.env' --exclude '.git' --exclude '.gitignore' --exclude 'README.md'",
+    "start:dev" : "electron .",
+    "dist:mac": "electron-builder -m",
+    "dist:win": "electron-builder --win --ia32"
   },
   "author": "Storm Games Ltd",
   "license": "SEE LICENSE IN <filename>",
@@ -24,7 +22,7 @@
   },
   "homepage": "https://www.stormgamingtechnology.com",
   "build": {
-    "asar": false,
+    "asar": true,
     "productName": "GRC Game Menu",
     "appId": "co.uk.stormgt.grc",
     "copyright": "Copyright @2023 author",
@@ -37,7 +35,7 @@
       "icon": "./assets/images/icon.ico"
     },
     "directories": {
-      "output": "../dist"
+      "output": "dist"
     }
   },
   "dependencies": {
