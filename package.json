@@ -25,7 +25,7 @@
   "homepage": "https://www.stormgamingtechnology.com",
   "build": {
     "asar": true,
-    "productName": "GRC Game Menu",
+    "productName": "GrcGameMenu",
     "appId": "co.uk.stormgt.grc",
     "copyright": "Copyright @2023 author",
     "mac": {
@@ -35,6 +35,12 @@
     "win": {
       "target": "nsis",
       "icon": "./assets/images/icon.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "installerIcon": "./assets/images/icon.ico",
+      "uninstallerIcon": "./assets/images/icon.ico",
+      "installerHeaderIcon": "./assets/images/icon.ico"
     },
     "directories": {
       "output": "dist"
