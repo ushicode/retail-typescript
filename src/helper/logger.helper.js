@@ -1,26 +1,26 @@
-import log from "electron-log";
-import * as path from "path";
-import os from "os";
+const path = require('path');
+const os = require('os');
+const log = require('electron-log');
 
-export default class LoggerHelper {
-  private homeDirectory = os.homedir();
-  private logFileName: string;
+class LoggerHelper {
+  homeDirectory = os.homedir();
+  logFileName;
 
-  constructor(logFileName: string) {
+  constructor(logFileName) {
     this.logFileName = logFileName;
     this.createLogFile();
   }
 
-  private createLogFile() {
+  createLogFile() {
     try {
       log.transports.file.resolvePath = () =>
         path.join(this.homeDirectory, `GRC_APP/logs/${this.logFileName}.log`);
-    } catch (error: any) {
+    } catch (error) {
       alert(`Write to file failed ${JSON.stringify(error.message)}`);
     }
   }
 
-  public writeToFile( title: string, type?: string) {
+ writeToFile( title, type = 'info') {
     switch (type) {
       case "error":
         log.error(title);
@@ -34,3 +34,5 @@ export default class LoggerHelper {
     }
   }
 }
+
+module.exports = LoggerHelper;

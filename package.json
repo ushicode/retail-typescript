@@ -1,19 +1,15 @@
 {
   "name": "grc-retail-typescript",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.1",
   "description": "electron wrapper for GRC Retail App",
   "private": true,
-  "publisher": "author",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "clean": "tsc --build --clean",
-    "copy:dev": "rsync -av --exclude 'index.ts' --exclude '.env' --exclude '.git' --exclude 'node_modules' --exclude 'tsconfig.json' --exclude '.gitignore' --exclude 'README.md' --exclude 'build' --exclude 'dist' --exclude 'src'  ./ build",
-    "copy:release": "rsync -av --exclude 'index.ts' --exclude '.env' --exclude '.git' --exclude '.gitignore' --exclude 'tsconfig.json' --exclude 'README.md' --exclude 'build' --exclude 'src'  ./ build",
-    "start:dev": "concurrently \"rm -rf ./build && npm run build && npm run copy:dev && cd build && electron .\" ",
-    "dist:mac": "concurrently \"rm -rf ./dist && rm -rf ./build && npm run build && npm run copy:release && cd build && electron-builder -m\" ",
-    "dist:win": "concurrently \"rm -rf ./dist && rm -rf ./build && npm run build && npm run copy:release && cd build && electron-builder --windows nsis:ia32\" "
+    "excludes": "rsync -av --exclude  --exclude '.env' --exclude '.git' --exclude '.gitignore' --exclude 'README.md'",
+    "start:dev" : "electron .",
+    "dist:mac": "electron-builder -m",
+    "dist:win": "electron-builder --win --ia32"
   },
   "author": "Storm Games Ltd",
   "license": "SEE LICENSE IN <filename>",
@@ -39,7 +35,7 @@
       "icon": "./assets/images/icon.ico"
     },
     "directories": {
-      "output": "../dist"
+      "output": "dist"
     }
   },
   "dependencies": {
@@ -52,7 +48,6 @@
     "concurrently": "^8.2.0",
     "electron": "^25.4.0",
     "electron-builder": "^24.6.3",
-    "electron-reloader": "^1.2.3",
     "typescript": "^5.1.6"
   }
 }
