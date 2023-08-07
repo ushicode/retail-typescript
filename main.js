@@ -6,6 +6,7 @@ const os = require('os');
 const log = require('electron-log');
 log.transports.file.resolvePath = () => path.join(os.homedir(), 'NEW_GRC/logs/electron.log');
 log.log(`Application version = ${app.getVersion()}`)
+log.info('App starting...')
 const  UpdaterService = require('./src/services/updater.service')
 const NotificationService = require('./src/services/notification.service')
 
@@ -17,7 +18,7 @@ updaterService;
 
 let isInternetAvailable = true;
 
-const enableDevMode = true;
+const enableDevMode = false;
 
 let browserWindow;
 const createWindow = () => {
@@ -49,13 +50,13 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   createWindow();
-
-  // check for updates
-  updaterService.checkForUpdateAndNotify()
   
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
+
+      // check for updates
+      updaterService.checkForUpdateAndNotify()
     }
   });
 });
@@ -76,23 +77,30 @@ app.whenReady().then(() => {
  */
 
 
+autoUpdater.on('error', async (error) => {
+  log.info(`Error in auto-updater. ${error}`)
+  if(error.name === 'Error'){
+    const param = { title: error.name, detail: error.message  }
+   const handleError = await notificationService.presentAndHandleMessage("error", param);
+
+  //  send response to logger but display 'Error updating to users'
+   dialog.showMessageBox({
+    title: `3`,
+    message: JSON.stringify(handleError),
+    buttons: ["OK"],
+    type: "info",
+    noLink: true
+  });
+  }
+})
+
+
+
 autoUpdater.on("checking-for-update", (info) => {
   log.info('checking-for-update')
   dialog.showMessageBox({
     title: `1`,
     message: `checking-for-update. Current version ${app.getVersion()}`,
-    buttons: ["OK"],
-    type: "info",
-    noLink: true
-  });
-})
-
-
-autoUpdater.on("update-not-available", (info) => {
-  log.info('update-not-available')
-  dialog.showMessageBox({
-    title: `3`,
-    message: `update-not-available`,
     buttons: ["OK"],
     type: "info",
     noLink: true
@@ -111,12 +119,27 @@ autoUpdater.on("update-available", (info) => {
   });
 })
 
+
+autoUpdater.on("update-not-available", (info) => {
+  log.info('update-not-available')
+  dialog.showMessageBox({
+    title: `3`,
+    message: `update-not-available`,
+    buttons: ["OK"],
+    type: "info",
+    noLink: true
+  });
+})
+
 autoUpdater.on("download-progress", (trackProgress) => {
   log.info('\n\ndownload-progress')
   log.info(trackProgress);
+  let log_message = "Download speed: " + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
   dialog.showMessageBox({
     title: `5`,
-    message: `download-progress ${JSON.stringify(trackProgress)}`,
+    message: `download-progress ${JSON.stringify(log_message)}`,
     buttons: ["OK"],
     type: "info",
     noLink: true
@@ -127,6 +150,10 @@ autoUpdater.on("download-progress", (trackProgress) => {
 
 autoUpdater.on("update-downloaded", (info) => {
   log.info('update-downloaded');
+
+  // on update downloaded && Use response = 1 or 0
+  autoUpdater.quitAndInstall();  
+
   dialog.showMessageBox({
     title: `6`,
     message: `$Update complete  ✅ ${JSON.stringify(info)}`,
@@ -134,23 +161,6 @@ autoUpdater.on("update-downloaded", (info) => {
     type: "info",
     noLink: true
   });
-})
-
-
-
-autoUpdater.on('error', async (error) => {
-  log.info(`Error in auto-updater. ${error}`)
-  if(error.name === 'Error'){
-    const param = { title: error.name, detail: error.message  }
-   const handleError = await notificationService.presentAndHandleMessage("error", param);
-   dialog.showMessageBox({
-    title: `3`,
-    message: JSON.stringify(handleError),
-    buttons: ["OK"],
-    type: "info",
-    noLink: true
-  });
-  }
 })
 
 
