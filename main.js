@@ -152,7 +152,7 @@ autoUpdater.on("update-downloaded", (info) => {
   log.info('update-downloaded');
 
   // on update downloaded && Use response = 1 or 0
-  autoUpdater.quitAndInstall();  
+  // autoUpdater.quitAndInstall();  
 
   dialog.showMessageBox({
     title: `6`,
